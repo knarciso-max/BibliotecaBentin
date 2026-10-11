@@ -1,0 +1,8 @@
+@model List<Prestamo>
+@{ ViewData["Title"] = "Historial"; var u = (UsuarioBiblioteca)ViewBag.Usuario; }
+<div class="toolbar"><div><h1>Historial de @u.Nombres</h1><div class="subtitle" style="margin:0">@u.Codigo · @u.Tipo</div></div><a class="btn secondary" asp-action="Index">← Volver</a></div>
+<div class="card"><table><thead><tr><th>Préstamo</th><th>Libro</th><th>Prestado</th><th>Vence</th><th>Devuelto</th><th>Renov.</th><th>Estado</th></tr></thead><tbody>
+@foreach (var p in Model)
+{ <tr><td>@p.Codigo</td><td>@p.Titulos</td><td>@p.FechaPrestamo.ToString("dd/MM/yyyy")</td><td>@p.FechaVencimiento.ToString("dd/MM/yyyy")</td><td>@p.FechaDevolucion?.ToString("dd/MM/yyyy")</td><td>@p.Renovaciones</td><td><span class="badge @Ui.Badge(p.Estado)">@p.Estado</span></td></tr> }
+@if (!Model.Any()) { <tr><td colspan="7" class="muted">Sin préstamos registrados.</td></tr> }
+</tbody></table></div>

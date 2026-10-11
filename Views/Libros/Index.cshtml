@@ -1,0 +1,27 @@
+@model List<Libro>
+@{ ViewData["Title"] = "Catálogo de libros"; }
+<div class="toolbar"><div><h1>Catálogo de libros</h1><div class="subtitle" style="margin:0">Consulta y gestión de ejemplares.</div></div>
+  <a class="btn primary" asp-action="Crear">+ Nuevo libro</a></div>
+<div class="card">
+  <form method="get" class="toolbar">
+    <div class="search"><input name="q" value="@ViewBag.Q" placeholder="Buscar por título, autor, categoría o código..." style="width:340px"><button class="btn secondary">Buscar</button></div>
+    <select name="categoria" class="btn secondary" onchange="this.form.submit()">
+      <option value="">Todas las categorías</option>
+      @foreach (var c in (List<string>)ViewBag.Categorias) { <option value="@c" selected="@(c == (string?)ViewBag.Categoria)">@c</option> }
+    </select>
+  </form>
+  <table><thead><tr><th>Código</th><th>Título</th><th>Autor</th><th>Categoría</th><th>Disponibilidad</th><th>Acción</th></tr></thead><tbody>
+  @foreach (var l in Model)
+  {
+    <tr><td>@l.Codigo</td><td><b>@l.Titulo</b></td><td>@l.Autor</td><td>@l.Categoria</td>
+      <td><span class="badge @(l.Disponibles > 0 ? "available" : "loan")">@(l.Disponibles > 0 ? "Disponible" : "Prestado") · @l.Disponibles/@l.Total</span></td>
+      <td>
+        @if (l.Disponibles > 0) { <a class="btn secondary sm" asp-controller="Prestamos" asp-action="Nuevo" asp-route-libro="@l.Codigo">Prestar</a> }
+        else { <a class="btn secondary sm" asp-controller="Reservas" asp-action="Index" asp-route-libro="@l.Codigo">Reservar</a> }
+        <a class="btn secondary sm" asp-action="Editar" asp-route-id="@l.Id">Editar</a>
+        <form asp-action="Desactivar" asp-route-id="@l.Id" method="post" class="inline" onsubmit="return confirm('¿Desactivar este libro?')"><button class="btn danger sm">Desactivar</button></form>
+      </td></tr>
+  }
+  @if (!Model.Any()) { <tr><td colspan="6" class="muted">No se encontraron libros.</td></tr> }
+  </tbody></table>
+</div>

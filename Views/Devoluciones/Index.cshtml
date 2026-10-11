@@ -1,0 +1,15 @@
+@model List<Prestamo>
+@{ ViewData["Title"] = "Devoluciones"; }
+<h1>Devoluciones</h1><div class="subtitle">Recepción y registro de libros devueltos.</div>
+<div class="card">
+  <form method="get" class="search" style="margin-bottom:18px"><input name="q" value="@ViewBag.Q" placeholder="Buscar préstamo por usuario, DNI, código o libro..." style="flex:1" autofocus><button class="btn primary">Buscar</button></form>
+  <table><thead><tr><th>Préstamo</th><th>Usuario</th><th>Libro</th><th>Vencimiento</th><th>Estado</th><th></th></tr></thead><tbody>
+  @foreach (var p in Model)
+  {
+    <tr><td>@p.Codigo</td><td>@p.UsuarioBiblioteca.Nombres</td><td>@p.Titulos</td><td>@p.FechaVencimiento.ToString("dd/MM/yyyy")</td>
+      <td><span class="badge @Ui.Badge(p.Estado)">@p.Estado</span></td>
+      <td><form asp-action="Registrar" asp-route-id="@p.Id" method="post"><button class="btn @(p.Estado == EstadoPrestamo.Vencido ? "danger" : "success")">Registrar devolución</button></form></td></tr>
+  }
+  @if (!Model.Any()) { <tr><td colspan="6" class="muted">No hay préstamos pendientes de devolución.</td></tr> }
+  </tbody></table>
+</div>

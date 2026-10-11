@@ -1,0 +1,21 @@
+@model List<Reserva>
+@{ ViewData["Title"] = "Reservas"; }
+<h1>Reservas</h1><div class="subtitle">Para libros sin ejemplares disponibles. Al devolverse un ejemplar, la reserva más antigua pasa a "Lista".</div>
+<div class="card" style="margin-bottom:18px"><h3>Nueva reserva</h3>
+  <form asp-action="Crear" method="post" class="search">
+    <input name="usuario" list="dlU" data-lookup="/Lookup/Usuarios" placeholder="Usuario (código o DNI)" required autocomplete="off"><datalist id="dlU"></datalist>
+    <input name="libro" list="dlL" data-lookup="/Lookup/Libros" value="@ViewBag.Libro" placeholder="Libro (código o título)" required autocomplete="off" style="width:280px"><datalist id="dlL"></datalist>
+    <button class="btn primary">Reservar</button></form></div>
+<div class="card"><table><thead><tr><th>Reserva</th><th>Usuario</th><th>Libro</th><th>Fecha</th><th>Estado</th><th></th></tr></thead><tbody>
+@foreach (var r in Model)
+{
+  <tr><td>RES-@(2000 + r.Id)</td><td>@r.UsuarioBiblioteca.Nombres</td><td>@r.Libro.Titulo</td><td>@r.Fecha.ToString("dd/MM/yyyy")</td>
+    <td><span class="badge @Ui.Badge(r.Estado)">@r.Estado</span></td>
+    <td>@if (r.Estado is EstadoReserva.Pendiente or EstadoReserva.Lista)
+        {
+          if (r.Estado == EstadoReserva.Pendiente) { <form asp-action="Lista" asp-route-id="@r.Id" method="post" class="inline"><button class="btn success sm">Marcar lista</button></form> }
+          <form asp-action="Cancelar" asp-route-id="@r.Id" method="post" class="inline"><button class="btn danger sm">Cancelar</button></form>
+        }</td></tr>
+}
+@if (!Model.Any()) { <tr><td colspan="6" class="muted">Sin reservas.</td></tr> }
+</tbody></table></div>

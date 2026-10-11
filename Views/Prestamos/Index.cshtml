@@ -1,0 +1,20 @@
+@model List<Prestamo>
+@{ ViewData["Title"] = "Préstamos"; }
+<div class="toolbar"><div><h1>Préstamos</h1><div class="subtitle" style="margin:0">Registro y seguimiento.</div></div><a class="btn primary" asp-action="Nuevo">+ Registrar préstamo</a></div>
+<div class="card">
+  <form method="get" class="toolbar"><div class="search"><input name="q" value="@ViewBag.Q" placeholder="Usuario, código, DNI o libro..." style="width:340px"><button class="btn secondary">Buscar</button></div>
+    <select name="estado" class="btn secondary" onchange="this.form.submit()"><option value="">Todos los estados</option>
+      @foreach (var e in Enum.GetValues<EstadoPrestamo>()) { <option value="@e" selected="@(e.ToString() == (string?)ViewBag.Estado)">@e</option> }</select></form>
+  <table><thead><tr><th>Préstamo</th><th>Usuario</th><th>Libro</th><th>Vencimiento</th><th>Renov.</th><th>Estado</th><th></th></tr></thead><tbody>
+  @foreach (var p in Model)
+  {
+    <tr><td>@p.Codigo</td><td>@p.UsuarioBiblioteca.Nombres</td><td>@p.Titulos</td><td>@p.FechaVencimiento.ToString("dd/MM/yyyy")</td><td>@p.Renovaciones</td>
+      <td><span class="badge @Ui.Badge(p.Estado)">@p.Estado</span></td>
+      <td>
+        @if (p.Estado == EstadoPrestamo.Activo) { <form asp-action="Renovar" asp-route-id="@p.Id" method="post" class="inline"><button class="btn secondary sm">Renovar</button></form> }
+        @if (p.Estado is EstadoPrestamo.Activo or EstadoPrestamo.Vencido) { <form asp-action="Perdido" asp-route-id="@p.Id" method="post" class="inline" onsubmit="return confirm('¿Reportar el libro como perdido? Se generará una sanción.')"><button class="btn danger sm">Perdido</button></form> }
+      </td></tr>
+  }
+  @if (!Model.Any()) { <tr><td colspan="7" class="muted">Sin resultados.</td></tr> }
+  </tbody></table>
+</div>

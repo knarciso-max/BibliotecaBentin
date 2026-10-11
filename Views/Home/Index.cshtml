@@ -1,0 +1,21 @@
+@model Resumen
+@{ ViewData["Title"] = "Dashboard"; var max = Math.Max(1, Model.Semana.Max(s => s.N)); }
+<h1>Buenos días 👋</h1><div class="subtitle">Resumen de la actividad de la biblioteca.</div>
+<div class="grid4">
+  <div class="card stat"><div><div class="label">Libros registrados</div><div class="num">@Model.Libros</div><div class="muted">Colección activa</div></div><div class="statIcon">📚</div></div>
+  <div class="card stat"><div><div class="label">Préstamos activos</div><div class="num">@Model.Activos</div><div class="muted">Incluye vencidos</div></div><div class="statIcon">↗</div></div>
+  <div class="card stat"><div><div class="label">Vencidos</div><div class="num red">@Model.Vencidos</div><div class="muted">Requieren seguimiento</div></div><div class="statIcon">⚠</div></div>
+  <div class="card stat"><div><div class="label">Reservas</div><div class="num">@Model.Reservas</div><div class="muted">Pendientes / listas</div></div><div class="statIcon">☆</div></div>
+</div>
+<div style="height:18px"></div>
+<div class="grid2">
+  <div class="card"><div class="panelTitle"><h2>Préstamos de los últimos 7 días</h2></div>
+    <div class="chart">
+      @foreach (var s in Model.Semana) { <div class="bar" style="height:@(Math.Max(5, s.N * 100 / max))%"><i>@s.N</i><span>@s.Dia</span></div> }
+    </div></div>
+  <div class="card"><div class="panelTitle"><h2>Alertas</h2></div>
+    <a asp-controller="Reportes" style="text-decoration:none"><div class="notice" style="margin-bottom:10px">⚠ <b>@Model.Vencidos préstamos vencidos</b><br><span>Revisar seguimiento y sanciones.</span></div></a>
+    <div class="notice" style="margin-bottom:10px;background:#fffbeb;border-color:#fde68a;color:#92400e">☆ <b>@Model.Reservas reservas en espera</b></div>
+    <div class="notice" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534">✓ <b>@Model.DevolucionesHoy devoluciones registradas hoy</b></div>
+  </div>
+</div>

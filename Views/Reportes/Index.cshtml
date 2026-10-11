@@ -1,0 +1,23 @@
+@model List<LibroUso>
+@{ ViewData["Title"] = "Reportes"; var d = (DateTime)ViewBag.Desde; var h = (DateTime)ViewBag.Hasta; var venc = (List<Prestamo>)ViewBag.Vencidos; }
+<div class="toolbar"><div><h1>Reportes</h1><div class="subtitle" style="margin:0">Información para la gestión y la dirección académica.</div></div>
+  <a class="btn primary" asp-action="Exportar" asp-route-desde="@d.ToString("yyyy-MM-dd")" asp-route-hasta="@h.ToString("yyyy-MM-dd")">↓ Exportar préstamos (CSV)</a></div>
+<form method="get" class="search" style="margin-bottom:18px">
+  <div class="field"><label>Desde</label><input type="date" name="desde" value="@d.ToString("yyyy-MM-dd")"></div>
+  <div class="field"><label>Hasta</label><input type="date" name="hasta" value="@h.ToString("yyyy-MM-dd")"></div>
+  <div class="field"><label>&nbsp;</label><button class="btn secondary">Aplicar</button></div></form>
+<div class="grid3">
+  <div class="card"><div class="label">Libro más solicitado</div><div style="font-size:20px;font-weight:800;margin:9px 0">@(Model.FirstOrDefault()?.Titulo ?? "—")</div><div class="muted">@(Model.FirstOrDefault()?.Prestamos ?? 0) préstamos en el periodo</div></div>
+  <div class="card"><div class="label">Usuarios con atrasos</div><div style="font-size:20px;font-weight:800;margin:9px 0">@venc.Select(v => v.UsuarioBibliotecaId).Distinct().Count() usuarios</div><div class="muted">@venc.Count préstamos vencidos</div></div>
+  <div class="card"><div class="label">Préstamos del periodo</div><div style="font-size:20px;font-weight:800;margin:9px 0">@ViewBag.Total</div><div class="muted">@d.ToString("dd/MM") – @h.ToString("dd/MM/yyyy")</div></div>
+</div>
+<div style="height:18px"></div>
+<div class="card"><h2>Libros más prestados</h2><table><thead><tr><th>Libro</th><th>Préstamos</th><th>Disponibilidad</th></tr></thead><tbody>
+@foreach (var l in Model) { <tr><td>@l.Titulo</td><td>@l.Prestamos</td><td>@l.Disponibles / @l.Total</td></tr> }
+@if (!Model.Any()) { <tr><td colspan="3" class="muted">Sin préstamos en el periodo.</td></tr> }
+</tbody></table></div>
+<div style="height:18px"></div>
+<div class="card"><h2>Usuarios con préstamos vencidos</h2><table><thead><tr><th>Usuario</th><th>Libro</th><th>Venció</th><th>Días de atraso</th></tr></thead><tbody>
+@foreach (var p in venc) { <tr><td>@p.UsuarioBiblioteca.Nombres <span class="muted">@p.UsuarioBiblioteca.Codigo</span></td><td>@p.Titulos</td><td>@p.FechaVencimiento.ToString("dd/MM/yyyy")</td><td class="red">@((DateTime.Today - p.FechaVencimiento).Days)</td></tr> }
+@if (!venc.Any()) { <tr><td colspan="4" class="muted">No hay préstamos vencidos.</td></tr> }
+</tbody></table></div>

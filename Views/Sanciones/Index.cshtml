@@ -1,0 +1,18 @@
+@model List<Sancion>
+@{ ViewData["Title"] = "Sanciones"; }
+<h1>Sanciones</h1><div class="subtitle">Registro administrativo por pérdida, daño o atraso. Un usuario con sanción pendiente no puede recibir préstamos.</div>
+<div class="card" style="margin-bottom:18px"><h3>Registrar sanción manual</h3>
+  <form asp-action="Crear" method="post" class="search">
+    <input name="usuario" list="dlU" data-lookup="/Lookup/Usuarios" placeholder="Usuario (código o DNI)" required autocomplete="off"><datalist id="dlU"></datalist>
+    <select name="motivo" class="btn secondary"><option>Daño</option><option>Pérdida</option><option>Atraso</option><option>Otro</option></select>
+    <input name="descripcion" maxlength="250" placeholder="Detalle (libro, observaciones)" style="width:300px">
+    <button class="btn primary">Registrar</button></form></div>
+<div class="card"><table><thead><tr><th>Usuario</th><th>Motivo</th><th>Detalle</th><th>Fecha</th><th>Estado</th><th></th></tr></thead><tbody>
+@foreach (var s in Model)
+{
+  <tr><td>@s.UsuarioBiblioteca.Nombres<div class="muted">@s.UsuarioBiblioteca.Codigo</div></td><td>@s.Motivo</td><td>@s.Descripcion</td><td>@s.Fecha.ToString("dd/MM/yyyy")</td>
+    <td><span class="badge @(s.Estado == EstadoSancion.Cumplida ? "available" : s.Estado == EstadoSancion.Pendiente ? "late" : "reserved")">@Ui.Texto(s.Estado)</span></td>
+    <td>@if (s.Estado != EstadoSancion.Cumplida) { <form asp-action="Cumplida" asp-route-id="@s.Id" method="post"><button class="btn success sm">Marcar cumplida</button></form> }</td></tr>
+}
+@if (!Model.Any()) { <tr><td colspan="6" class="muted">Sin sanciones registradas.</td></tr> }
+</tbody></table></div>

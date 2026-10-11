@@ -1,0 +1,18 @@
+@{ Layout = null; }
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ingresar - Biblioteca Ricardo Bentín</title><link rel="stylesheet" href="~/css/site.css" /></head>
+<body>
+<div class="loginWrap"><div class="login">
+  <div class="loginLogo"><div class="logoIcon">📚</div></div>
+  <h1>Biblioteca Ricardo Bentín</h1>
+  <p class="subtitle">Sistema de Gestión de Préstamos</p>
+  @if (ViewBag.Error is string e) { <div class="notice err">✕ @e</div> }
+  <form method="post">
+    <div class="field"><label>Usuario</label><input name="usuario" autofocus required placeholder="Ingrese su usuario"></div>
+    <div class="field"><label>Contraseña</label><input name="clave" type="password" required placeholder="Ingrese su contraseña"></div>
+    <button class="btn primary">Ingresar al sistema</button>
+  </form>
+  <div class="hint">I.E.E. Ricardo Bentín · Acceso restringido</div>
+</div></div>
+</body></html>

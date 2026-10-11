@@ -1,0 +1,50 @@
+@{
+    var c = ViewContext.RouteData.Values["controller"]?.ToString();
+    string A(string n) => c == n ? "active" : "";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@ViewData["Title"] - Biblioteca Ricardo Bentín</title>
+<link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo"><div class="logoIcon">📚</div><div>Biblioteca<br>Ricardo Bentín</div></div>
+    <div class="school">Sistema de Gestión de Préstamos</div>
+    <div class="nav">
+      <div class="section">Principal</div>
+      <a class="@A("Home")" asp-controller="Home" asp-action="Index">▦ &nbsp; Dashboard</a>
+      <a class="@A("Libros")" asp-controller="Libros" asp-action="Index">▤ &nbsp; Catálogo de libros</a>
+      <a class="@A("Usuarios")" asp-controller="Usuarios" asp-action="Index">◉ &nbsp; Usuarios</a>
+      <div class="section">Operaciones</div>
+      <a class="@A("Prestamos")" asp-controller="Prestamos" asp-action="Index">↗ &nbsp; Préstamos</a>
+      <a class="@A("Devoluciones")" asp-controller="Devoluciones" asp-action="Index">↙ &nbsp; Devoluciones</a>
+      <a class="@A("Reservas")" asp-controller="Reservas" asp-action="Index">☆ &nbsp; Reservas</a>
+      <a class="@A("Sanciones")" asp-controller="Sanciones" asp-action="Index">⚠ &nbsp; Sanciones</a>
+      <div class="section">Gestión</div>
+      <a class="@A("Reportes")" asp-controller="Reportes" asp-action="Index">▥ &nbsp; Reportes</a>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <div class="breadcrumb">Biblioteca / <b>@ViewData["Title"]</b></div>
+      <div class="user">
+        <div><b style="font-size:13px">@User.Identity?.Name</b>
+          <div class="muted">@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ·
+            <form asp-controller="Account" asp-action="Logout" method="post" class="inline"><button class="logout">Cerrar sesión</button></form></div></div>
+        <div class="avatar">@(User.Identity?.Name?.Substring(0, 1))</div>
+      </div>
+    </header>
+    <div class="content">
+      @if (TempData["ok"] is string ok) { <div class="notice ok">✓ @ok</div> }
+      @if (TempData["err"] is string err) { <div class="notice err">✕ @err</div> }
+      @RenderBody()
+    </div>
+  </main>
+</div>
+<script src="~/js/site.js"></script>
+</body>
+</html>

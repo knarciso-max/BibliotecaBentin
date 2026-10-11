@@ -1,0 +1,16 @@
+@{ ViewData["Title"] = "Registrar préstamo"; }
+<h1>Registrar préstamo</h1><div class="subtitle">Proceso guiado en 3 pasos.</div>
+<div class="card">
+  <div class="timeline"><div class="step"><b>1. Usuario</b><div class="track"><div class="fill" style="width:100%"></div></div></div><div class="step"><b>2. Libro</b><div class="track"><div class="fill" style="width:100%"></div></div></div><div class="step"><b>3. Confirmación</b><div class="track"><div class="fill" style="width:100%"></div></div></div></div>
+  <div style="height:22px"></div>
+  <form method="post">
+    <div class="form">
+      <div class="field"><label>Usuario (código, DNI o nombre)</label><input name="usuario" list="dlU" data-lookup="/Lookup/Usuarios" value="@ViewBag.Usuario" required autofocus autocomplete="off"><datalist id="dlU"></datalist></div>
+      <div class="field"><label>Libro (código o título)</label><input name="libro" list="dlL" data-lookup="/Lookup/Libros" value="@ViewBag.Libro" required autocomplete="off"><datalist id="dlL"></datalist></div>
+      <div class="field"><label>Fecha de préstamo</label><input value="@DateTime.Today.ToString("dd/MM/yyyy")" readonly></div>
+      <div class="field"><label>Vencimiento</label><input value="Automático: 7 días (estudiante) / 14 días (docente)" readonly></div>
+      <div class="field full"><label>Observación</label><input name="observacion" maxlength="200" placeholder="Opcional"></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:9px;margin-top:20px"><a class="btn secondary" asp-action="Index">Cancelar</a><button class="btn primary">Confirmar préstamo</button></div>
+  </form>
+</div>

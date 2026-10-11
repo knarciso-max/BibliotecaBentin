@@ -1,0 +1,23 @@
+@model List<UsuarioFila>
+@{ ViewData["Title"] = "Usuarios"; }
+<div class="toolbar"><div><h1>Usuarios</h1><div class="subtitle" style="margin:0">Estudiantes y personal de la institución.</div></div>
+  <a class="btn primary" asp-action="Crear">+ Nuevo usuario</a></div>
+<div class="card">
+  <form method="get" class="search" style="margin-bottom:16px"><input name="q" value="@ViewBag.Q" placeholder="Buscar por nombre, código o DNI..." style="width:340px"><button class="btn secondary">Buscar</button></form>
+  <table><thead><tr><th>Código</th><th>Nombre</th><th>Tipo</th><th>Grado/Sec.</th><th>Préstamos activos</th><th>Estado</th><th></th></tr></thead><tbody>
+  @foreach (var f in Model)
+  {
+    <tr><td>@f.U.Codigo</td><td><b>@f.U.Nombres</b><div class="muted">DNI @f.U.Dni</div></td><td>@f.U.Tipo</td><td>@f.U.Grado @f.U.Seccion</td><td>@f.Activos</td>
+      <td>
+        @if (!f.U.Activo) { <span class="badge reserved">Inactivo</span> }
+        else if (f.Vencidos > 0) { <span class="badge late">@f.Vencidos vencido(s)</span> }
+        else if (f.Sanciones > 0) { <span class="badge reserved">Sancionado</span> }
+        else { <span class="badge available">Activo</span> }
+      </td>
+      <td><a class="btn secondary sm" asp-action="Historial" asp-route-id="@f.U.Id">Historial</a>
+          <a class="btn secondary sm" asp-action="Editar" asp-route-id="@f.U.Id">Editar</a>
+          <form asp-action="CambiarEstado" asp-route-id="@f.U.Id" method="post" class="inline"><button class="btn danger sm">@(f.U.Activo ? "Desactivar" : "Activar")</button></form></td></tr>
+  }
+  @if (!Model.Any()) { <tr><td colspan="7" class="muted">No se encontraron usuarios.</td></tr> }
+  </tbody></table>
+</div>

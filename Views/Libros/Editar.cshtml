@@ -1,0 +1,20 @@
+@model Libro
+@{ ViewData["Title"] = "Editar libro"; var editar = Model.Id > 0; }
+<h1>@ViewData["Title"]</h1><div class="subtitle">Complete los datos del título.</div>
+<div class="card"><form method="post">
+  <div asp-validation-summary="All" class="text-danger"></div>
+  <input type="hidden" asp-for="Id" />
+  <div class="form">
+    <div class="field"><label asp-for="Codigo"></label>
+      @if (editar) { <input asp-for="Codigo" readonly /><input type="hidden" asp-for="Codigo" /> } else { <input asp-for="Codigo" placeholder="LIB-007" /> }
+      <span asp-validation-for="Codigo" class="text-danger"></span></div>
+    <div class="field"><label asp-for="Titulo"></label><input asp-for="Titulo" /><span asp-validation-for="Titulo" class="text-danger"></span></div>
+    <div class="field"><label asp-for="Autor"></label><input asp-for="Autor" /><span asp-validation-for="Autor" class="text-danger"></span></div>
+    <div class="field"><label asp-for="Categoria"></label><input asp-for="Categoria" list="cats" /><datalist id="cats"><option>Literatura</option><option>Ciencias</option><option>Historia</option></datalist><span asp-validation-for="Categoria" class="text-danger"></span></div>
+    <div class="field"><label asp-for="Editorial"></label><input asp-for="Editorial" /></div>
+    <div class="field"><label asp-for="Anio"></label><input asp-for="Anio" type="number" /><span asp-validation-for="Anio" class="text-danger"></span></div>
+    <div class="field"><label>@(editar ? "Agregar ejemplares" : "Ejemplares a registrar")</label><input asp-for="EjemplaresNuevos" type="number" min="0" />
+      @if (editar) { <span class="muted">Ejemplares actuales: @Model.Total</span> }</div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;gap:9px;margin-top:20px"><a class="btn secondary" asp-action="Index">Cancelar</a><button class="btn primary">Guardar libro</button></div>
+</form></div>

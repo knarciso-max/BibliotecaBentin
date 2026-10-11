@@ -1,0 +1,18 @@
+@model UsuarioBiblioteca
+@{ ViewData["Title"] = "Editar usuario"; var editar = Model.Id > 0; }
+<h1>@ViewData["Title"]</h1><div class="subtitle">Estudiante o docente de la institución.</div>
+<div class="card"><form method="post">
+  <div asp-validation-summary="All" class="text-danger"></div>
+  <input type="hidden" asp-for="Id" />
+  <div class="form">
+    <div class="field"><label asp-for="Codigo"></label>
+      @if (editar) { <input asp-for="Codigo" readonly /><input type="hidden" asp-for="Codigo" /> } else { <input asp-for="Codigo" placeholder="EST-1200" /> }
+      <span asp-validation-for="Codigo" class="text-danger"></span></div>
+    <div class="field"><label asp-for="Dni"></label><input asp-for="Dni" maxlength="8" /><span asp-validation-for="Dni" class="text-danger"></span></div>
+    <div class="field full"><label asp-for="Nombres"></label><input asp-for="Nombres" /><span asp-validation-for="Nombres" class="text-danger"></span></div>
+    <div class="field"><label asp-for="Tipo"></label><select asp-for="Tipo" asp-items="Html.GetEnumSelectList<TipoUsuario>()"></select></div>
+    <div class="field"><label asp-for="Grado"></label><input asp-for="Grado" placeholder="3°" /></div>
+    <div class="field"><label asp-for="Seccion"></label><input asp-for="Seccion" placeholder="A" /></div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;gap:9px;margin-top:20px"><a class="btn secondary" asp-action="Index">Cancelar</a><button class="btn primary">Guardar</button></div>
+</form></div>
